@@ -10,7 +10,8 @@ const listLocales = async ctx => {
 
   const locales = await localesService.find();
 
-  ctx.body = locales;
+  const model = strapi.getModel('locale', 'i18n');
+  ctx.body = sanitizeEntity(locales, { model });
 };
 
 const createLocale = async ctx => {
@@ -28,7 +29,7 @@ const createLocale = async ctx => {
 
   const existingLocale = await localesService.findByCode(body.code);
   if (existingLocale) {
-    return ctx.badRequest('This locale already exist');
+    return ctx.badRequest('This locale already exists');
   }
 
   let localeToCreate = formatLocale(body);
