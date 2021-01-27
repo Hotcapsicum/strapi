@@ -12,7 +12,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { QueryClientProvider, QueryClient } from 'react-query';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -30,7 +29,6 @@ import { Content, Wrapper } from './components';
 import { getDataSucceeded } from './actions';
 import NewNotification from '../NewNotification';
 
-const queryClient = new QueryClient()
 function App(props) {
   const getDataRef = useRef();
   const [{ isLoading, hasAdmin }, setState] = useState({ isLoading: true, hasAdmin: false });
@@ -105,21 +103,19 @@ function App(props) {
     <Theme>
       <Wrapper>
         <GlobalStyle />
-        <QueryClientProvider client={queryClient}>
-          <NotificationProvider />
-          <NewNotification />
-          <Content>
-            <Switch>
-              <Route
-                path="/auth/:authType"
-                render={routerProps => <AuthPage {...routerProps} hasAdmin={hasAdmin} />}
-                exact
-              />
-              <PrivateRoute path="/" component={Admin} />
-              <Route path="" component={NotFoundPage} />
-            </Switch>
-          </Content>
-        </QueryClientProvider>
+        <NotificationProvider />
+        <NewNotification />
+        <Content>
+          <Switch>
+            <Route
+              path="/auth/:authType"
+              render={routerProps => <AuthPage {...routerProps} hasAdmin={hasAdmin} />}
+              exact
+            />
+            <PrivateRoute path="/" component={Admin} />
+            <Route path="" component={NotFoundPage} />
+          </Switch>
+        </Content>
       </Wrapper>
     </Theme>
   );
