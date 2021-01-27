@@ -18,13 +18,13 @@ jest.mock('passport-local', () => {
 
 const passport = require('koa-passport');
 const createProviderRegistry = require('../passport/provider-registry');
-const createLocalStrategy = require('../passport/local-strategy');
+const createLocalStrategy = require('../../../services/passport/local-strategy');
 const {
-  init,
   syncProviderRegistryWithConfig,
   getProviderCallbackUrl,
   providerRegistry,
 } = require('../passport');
+const { init } = require('../../../services/passport');
 
 const register = jest.spyOn(providerRegistry, 'register');
 
