@@ -3,8 +3,9 @@
 const { capitalize } = require('lodash/fp');
 
 const actions = ['create', 'read', 'update', 'delete'].map(uid => ({
-  section: 'plugins',
-  subCategory: 'settings',
+  section: 'settings',
+  category: 'Internationalization',
+  subCategory: 'Locales',
   pluginName: 'i18n',
   displayName: capitalize(uid),
   uid: `locale.${uid}`,
