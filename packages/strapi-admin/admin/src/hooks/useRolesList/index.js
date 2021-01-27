@@ -1,49 +1,59 @@
 import { useEffect, useReducer } from 'react';
+import { useQuery } from 'react-query';
 import { request } from 'strapi-helper-plugin';
 import { get } from 'lodash';
 import init from './init';
 import reducer, { initialState } from './reducer';
 
+const fetchRoles = async () => {
+  const { data } = await request('/admin/roles', { method: 'GET' });
+
+  return data;
+};
+
 const useRolesList = (shouldFetchData = true) => {
-  const [{ roles, isLoading }, dispatch] = useReducer(reducer, initialState, () =>
-    init(initialState, shouldFetchData)
-  );
+  console.log(shouldFetchData);
+  const { data, isLoading, error } = useQuery('roleList', fetchRoles, { enabled: shouldFetchData });
 
-  useEffect(() => {
-    if (shouldFetchData) {
-      fetchRolesList();
-    }
-  }, [shouldFetchData]);
+  // const [{ roles, isLoading }, dispatch] = useReducer(reducer, initialState, () =>
+  //   init(initialState, shouldFetchData)
+  // );
 
-  const fetchRolesList = async () => {
-    try {
-      dispatch({
-        type: 'GET_DATA',
-      });
+  // useEffect(() => {
+  //   if (shouldFetchData) {
+  //     fetchRolesList();
+  //   }
+  // }, [shouldFetchData]);
 
-      const { data } = await request('/admin/roles', { method: 'GET' });
+  // const fetchRolesList = async () => {
+  //   try {
+  //     dispatch({
+  //       type: 'GET_DATA',
+  //     });
 
-      dispatch({
-        type: 'GET_DATA_SUCCEEDED',
-        data,
-      });
-    } catch (err) {
-      const message = get(err, ['response', 'payload', 'message'], 'An error occured');
+  //     const { data } = await request('/admin/roles', { method: 'GET' });
 
-      dispatch({
-        type: 'GET_DATA_ERROR',
-      });
+  //     dispatch({
+  //       type: 'GET_DATA_SUCCEEDED',
+  //       data,
+  //     });
+  //   } catch (err) {
+  //     const message = get(err, ['response', 'payload', 'message'], 'An error occured');
 
-      if (message !== 'Forbidden') {
-        strapi.notification.toggle({
-          type: 'warning',
-          message,
-        });
-      }
-    }
-  };
+  //     dispatch({
+  //       type: 'GET_DATA_ERROR',
+  //     });
 
-  return { roles, isLoading, getData: fetchRolesList };
+  //     if (message !== 'Forbidden') {
+  //       strapi.notification.toggle({
+  //         type: 'warning',
+  //         message,
+  //       });
+  //     }
+  //   }
+  // };
+
+  return { roles: data || [], isLoading, getData: () => {} };
 };
 
 export default useRolesList;
